@@ -1,3 +1,4 @@
+<!-- <<<<<<< HEAD
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
@@ -57,3 +58,32 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+=======
+# oakwood-edge
+oakwood-edge
+>>>>>>> aa4b85d8b8377e7942cf013b11cac63f63742a0c -->
+
+
+# Oakwood Edge
+
+Oakwood Edge project built using Laravel and Filament.
+
+## About
+This project manages client records, documents, and related resources through a Filament admin panel.
+
+## Tech Stack
+- Laravel
+- Filament
+- Livewire
+- MySQL
+
+## Setup
+1. Clone the repository
+2. Run `composer install`
+3. Copy `.env.example` to `.env`
+4. Run `php artisan key:generate`
+5. Run `php artisan migrate`
+6. Run `php artisan serve`
+
+## License
+MIT
