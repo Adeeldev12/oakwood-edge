@@ -72,7 +72,7 @@ class DoctorInvoiceResource extends BaseResource
                     ->label('VAT')
                     ->native(false)
                     ->options([
-                        5 => '5%',
+                        0 => '0%',
                         10 => '10%',
                         20 => '20%',
                     ])
