@@ -64,6 +64,15 @@ class ClientResource extends BaseResource
                             ->maxLength(255)
                             ->columnSpan(2),
 
+                            TextInput::make('mobile_number')
+                            ->label('Mobile Number')
+                            ->tel()
+                            ->columnSpan(1),
+
+                        TextInput::make('email')
+                            ->email()
+                            ->columnSpan(2),
+
                         TextInput::make('sol_ref')
                             ->label('Solicitor Ref')
                             ->maxLength(100),
@@ -76,14 +85,7 @@ class ClientResource extends BaseResource
                               // ->preload()
                             ->columnSpan(2),
 
-                        TextInput::make('mobile_number')
-                            ->label('Mobile Number')
-                            ->tel()
-                            ->columnSpan(1),
 
-                        TextInput::make('email')
-                            ->email()
-                            ->columnSpan(2),
 
                         // FileUpload::make('loi_bundle')
                         //     ->label('LOI & Bundle')
@@ -235,7 +237,7 @@ class ClientResource extends BaseResource
                             ->label('Medical Records')
                             ->directory('medical-records')
                             ->acceptedFileTypes(['application/pdf', 'image/*'])
-                            ->maxSize(10240) // 10MB
+                           ->maxSize(51200) // 50 MB per file
                             ->downloadable()
                             ->openable(),
 
@@ -243,7 +245,7 @@ class ClientResource extends BaseResource
                             ->label('Supporting / Relevant Records')
                             ->directory('supporting-records')
                             ->acceptedFileTypes(['application/pdf', 'image/*'])
-                            ->maxSize(10240)
+                            ->maxSize(51200) // 50 MB per file
                             ->downloadable()
                             ->openable(),
                     ]),
@@ -368,7 +370,7 @@ class ClientResource extends BaseResource
                     ->boolean(fn ($record) => ! empty($record->medical_records))
                     ->trueIcon('heroicon-o-check-circle')
                     ->falseIcon('heroicon-o-x-circle')
-                    ->trueColor('success')  
+                    ->trueColor('success')
                     ->falseColor('danger'),
 
                 IconColumn::make('supporting_records')
