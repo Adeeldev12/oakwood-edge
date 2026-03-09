@@ -71,6 +71,7 @@ class ClientResource extends BaseResource
 
                         TextInput::make('email')
                             ->email()
+                            ->label('Client Email')
                             ->columnSpan(2),
 
                         TextInput::make('sol_ref')
