@@ -56,4 +56,8 @@ public function solicitorInvoices()
     return $this->hasMany(SolicitorInvoice::class);
 }
 
+public function interpreter()
+{
+    return $this->belongsTo(Interpreter::class);
+}
 }

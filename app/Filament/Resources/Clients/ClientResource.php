@@ -86,6 +86,17 @@ class ClientResource extends BaseResource
                               // ->preload()
                             ->columnSpan(2),
 
+                            TextInput::make('interpreter_ref')
+    ->label('Interpreter Ref')
+    ->maxLength(255),
+
+Select::make('interpreter_id')
+    ->label('Interpreter')
+    ->relationship('interpreter', 'name')
+    ->searchable()
+    ->preload()
+    ->native(false)
+     ->columnSpan(2),
 
 
                         // FileUpload::make('loi_bundle')
