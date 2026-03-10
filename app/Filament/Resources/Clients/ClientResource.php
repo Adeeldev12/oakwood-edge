@@ -92,7 +92,7 @@ class ClientResource extends BaseResource
 
 Select::make('interpreter_id')
     ->label('Interpreter')
-    ->relationship('interpreter', 'name')
+    ->relationship('interpreter', 'interpreter_name')
     ->searchable()
     ->preload()
     ->native(false)
