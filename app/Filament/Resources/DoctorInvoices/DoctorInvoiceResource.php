@@ -77,15 +77,17 @@ class DoctorInvoiceResource extends BaseResource
                         20 => '20%',
                     ])
                     ->live()
+                    //
                     ->afterStateUpdated(function ($state, callable $set, callable $get) {
-                        $amount = (float) $get('amount');
+    $amount = (float) $get('amount');
 
-                        if ($amount && $state) {
-                            $vatAmount = ($amount * $state) / 100;
-                            $set('vat_amount', number_format($vatAmount, 2, '.', ''));
-                            $set('total_amount', number_format($amount + $vatAmount, 2, '.', ''));
-                        }
-                    }),
+    if ($amount !== null) {
+        $vatAmount = ($amount * $state) / 100;
+
+        $set('vat_amount', number_format($vatAmount, 2, '.', ''));
+        $set('total_amount', number_format($amount + $vatAmount, 2, '.', ''));
+    }
+}),
 
                 TextInput::make('vat_amount')
                     ->numeric()
