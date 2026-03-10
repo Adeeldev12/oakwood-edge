@@ -120,13 +120,29 @@ class SolicitorInvoiceResource extends BaseResource
             ->schema([
 
                 TextInput::make('amount')
-                    ->label('Base Amount')
-                    ->numeric()
-                    ->prefix('£')
-                    ->required()
-                    ->live()
-                    ->extraAttributes(['class' => 'py-4 text-lg'])
-                    ->columnSpan(1),
+    ->label('Base Amount')
+    ->numeric()
+    ->prefix('£')
+    ->required()
+    ->live()
+    ->extraAttributes(['class' => 'py-4 text-lg'])
+    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+
+        $vatRate = (float) ($get('vat_rate') ?? 0);
+        $amount = (float) $state;
+
+        if ($vatRate == 0) {
+            $set('vat_amount', 0);
+            $set('total_amount', $amount);
+            return;
+        }
+
+        $vatAmount = ($amount * $vatRate) / 100;
+
+        $set('vat_amount', round($vatAmount, 2));
+        $set('total_amount', round($amount + $vatAmount, 2));
+    })
+    ->columnSpan(1),
 
                 // TextInput::make('vat_rate')
                 //     ->label('VAT Rate (%)')
@@ -143,21 +159,30 @@ class SolicitorInvoiceResource extends BaseResource
                 Select::make('vat_rate')
     ->label('VAT Rate (%)')
     ->options([
+        0 => '0%',
         10 => '10%',
         20 => '20%',
     ])
-    ->default(20)
+    ->default(0)
     ->required()
     ->native(false)
     ->live()
     ->afterStateUpdated(function ($state, callable $set, callable $get) {
-        $amount = $get('amount') ?? 0;
+
+        $amount = (float) ($get('amount') ?? 0);
+
+        if ($state == 0) {
+            $set('vat_amount', 0);
+            $set('total_amount', $amount);
+            return;
+        }
+
         $vatAmount = ($amount * $state) / 100;
 
         $set('vat_amount', round($vatAmount, 2));
         $set('total_amount', round($amount + $vatAmount, 2));
     })
-                    ->columnSpan(1),
+    ->columnSpan(1),
 
                 TextInput::make('vat_amount')
                     ->numeric()
@@ -225,8 +250,8 @@ class SolicitorInvoiceResource extends BaseResource
                     ->sortable(),
 
                     TextColumn::make('vat_rate')
-                    ->formatStateUsing(fn ($state) => number_format((float) $state, 0) . '%')
-                ->label('VAT %'),
+    ->label('VAT %')
+    ->formatStateUsing(fn ($state) => $state !== null ? $state . '%' : '-'),
 
             TextColumn::make('vat_amount')
                 ->money('GBP', true),
