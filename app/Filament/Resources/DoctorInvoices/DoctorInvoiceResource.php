@@ -171,8 +171,8 @@ class DoctorInvoiceResource extends BaseResource
                     ->sortable(),
 
                 TextColumn::make('vat_rate')
-                    ->label('VAT')
-                    ->formatStateUsing(fn ($state) => $state ? $state.'%' : '-'),
+    ->label('VAT')
+    ->formatStateUsing(fn ($state) => $state !== null ? $state.'%' : '-'),
 
                 TextColumn::make('vat_amount')
                     ->money('GBP', true)
