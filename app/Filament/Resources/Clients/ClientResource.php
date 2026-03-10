@@ -323,6 +323,12 @@ Select::make('interpreter_id')
                     ->sortable()
                     ->toggleable(),
 
+                TextColumn::make('interpreter.interpreter_name')
+                    ->label('Interpreter')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+
                 TextColumn::make('mobile_number')
                     ->toggleable(),
 
@@ -342,7 +348,7 @@ Select::make('interpreter_id')
                     ->sortable(),
 
                 TextColumn::make('invoice_no')
-                    ->label('Invoice'),
+                    ->label('Invoice No'),
 
                 BadgeColumn::make('invoice_status')
                     ->colors([
