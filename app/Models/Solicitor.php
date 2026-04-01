@@ -23,4 +23,8 @@ class Solicitor extends Model
         return $this->hasMany(Client::class);
     }
 
+    public function invoices()
+{
+    return $this->hasMany(SolicitorInvoice::class);
+}
 }

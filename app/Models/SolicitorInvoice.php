@@ -25,10 +25,16 @@ class SolicitorInvoice extends Model
         'vat_rate',
         'vat_amount',
         'total_amount',
+        'solicitor_id',
     ];
 
     public function client()
     {
         return $this->belongsTo(Client::class);
     }
+
+    public function solicitor()
+{
+    return $this->belongsTo(Solicitor::class);
+}
 }

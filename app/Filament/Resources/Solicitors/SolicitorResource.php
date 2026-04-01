@@ -25,7 +25,7 @@ class SolicitorResource extends BaseResource
 {
     protected static ?string $model = Solicitor::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBriefcase;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Briefcase;
 
     public static function form(Schema $schema): Schema
     {

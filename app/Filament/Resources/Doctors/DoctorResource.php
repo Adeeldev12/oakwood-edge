@@ -32,7 +32,7 @@ class DoctorResource extends BaseResource
 {
     protected static ?string $model = Doctor::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::UserCircle;
 
     public static function form(Schema $schema): Schema
     {

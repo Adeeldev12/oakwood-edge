@@ -24,7 +24,7 @@ class InterpreterResource extends BaseResource
 {
     protected static ?string $model = Interpreter::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLanguage;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Language;
 
     public static function form(Schema $schema): Schema
     {

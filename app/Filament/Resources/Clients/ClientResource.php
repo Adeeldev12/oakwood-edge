@@ -20,6 +20,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -34,7 +36,7 @@ class ClientResource extends BaseResource
 {
     protected static ?string $model = Client::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Users;
 
     // protected static string|Heroicon|null $navigationIcon =
     // Heroicon::OutlinedUsers;
@@ -46,57 +48,220 @@ class ClientResource extends BaseResource
         return ClientForm::configure($schema)
             ->schema([
 
-                /* =========================
-             | Client Information
-             ========================= */
-                Section::make('Client Information')
-                    ->icon('heroicon-o-user')
-                    ->description('Basic client and solicitor details')
-                    ->columns(3)
-                    ->schema([
+    //           Section::make('Client Information')
+    // ->icon('heroicon-o-user')
+    // ->description('Basic client and solicitor details')
+    // ->columns(3)
+    // ->schema([
 
-                        TextInput::make('ref_no')
-                            ->label('Reference No')
-                            ->maxLength(100),
+    //     TextInput::make('ref_no')
+    //         ->label('Reference No')
+    //         ->maxLength(100),
 
-                        TextInput::make('client_name')
-                            ->required()
-                            ->maxLength(255)
-                            ->columnSpan(2),
+    //     TextInput::make('client_name')
+    //         ->required()
+    //         ->maxLength(255)
+    //         ->columnSpan(2),
 
-                            TextInput::make('mobile_number')
-                            ->label('Mobile Number')
-                            ->tel()
-                            ->columnSpan(1),
+    //     TextInput::make('mobile_number')
+    //         ->label('Mobile Number')
+    //         ->tel(),
 
-                        TextInput::make('email')
-                            ->email()
-                            ->label('Client Email')
-                            ->columnSpan(2),
+    //     TextInput::make('email')
+    //         ->email()
+    //         ->label('Client Email')
+    //         ->columnSpan(2),
 
-                        TextInput::make('sol_ref')
-                            ->label('Solicitor Ref')
-                            ->maxLength(100),
+    //     DatePicker::make('date_of_birth')
+    //         ->label('Date of Birth')
+    //         ->required(),
 
-                        Select::make('solicitor_id')
-                            ->label('Solicitor')
-                            ->relationship('solicitor', 'name')
-                              // ->searchable()
-                            ->native(false)
-                              // ->preload()
-                            ->columnSpan(2),
+    //     TextInput::make('sol_ref')
+    //         ->label('Solicitor Ref')
+    //         ->maxLength(100),
 
-                            TextInput::make('interpreter_ref')
-    ->label('Interpreter Ref')
-    ->maxLength(255),
+    //     Select::make('solicitor_id')
+    //         ->label('Solicitor')
+    //         ->relationship('solicitor', 'name')
+    //         ->native(false)
+    //         ->columnSpan(2),
 
-Select::make('interpreter_id')
-    ->label('Interpreter')
-    ->relationship('interpreter', 'interpreter_name')
-    ->searchable()
-    ->preload()
+    //     // ✅ MAIN TOGGLE
+    //     Toggle::make('interpreter_required')
+    //         ->label('Interpreter Required')
+    //         ->reactive()
+    //         ->columnSpanFull(),
+
+    //     // ✅ Choose Mode
+    //     Toggle::make('use_existing_interpreter')
+    //         ->label('Select Existing Interpreter')
+    //         ->reactive()
+    //         ->visible(fn ($get) => $get('interpreter_required'))
+    //         ->columnSpanFull(),
+
+    //     // =========================
+    //     // ✅ EXISTING INTERPRETER
+    //     // =========================
+    //     Select::make('interpreter_id')
+    //         ->label('Interpreter')
+    //         ->relationship('interpreter', 'interpreter_name')
+    //         ->searchable()
+    //         ->preload()
+    //         ->native(false)
+    //         ->visible(fn ($get) =>
+    //             $get('interpreter_required') && $get('use_existing_interpreter')
+    //         )
+    //         ->required(fn ($get) =>
+    //             $get('interpreter_required') && $get('use_existing_interpreter')
+    //         )
+    //         ->columnSpan(2),
+
+    //     // =========================
+    //     // ✅ NEW INTERPRETER FIELDS
+    //     // =========================
+    //     Grid::make(3)
+    //         ->schema([
+
+    //             TextInput::make('interpreter_name')
+    //                 ->label('Interpreter Name')
+    //                 ->required(fn ($get) =>
+    //                     $get('interpreter_required') && !$get('use_existing_interpreter')
+    //                 ),
+
+    //             TextInput::make('interpreter_email')
+    //                 ->email()
+    //                 ->label('Interpreter Email')
+    //                 ->required(fn ($get) =>
+    //                     $get('interpreter_required') && !$get('use_existing_interpreter')
+    //                 ),
+
+    //             TextInput::make('interpreter_language')
+    //                 ->label('Language')
+    //                 ->required(fn ($get) =>
+    //                     $get('interpreter_required') && !$get('use_existing_interpreter')
+    //                 ),
+
+    //             TextInput::make('interpreter_ref')
+    //                 ->label('Interpreter Ref'),
+
+    //         ])
+    //         ->visible(fn ($get) =>
+    //             $get('interpreter_required') && !$get('use_existing_interpreter')
+    //         )
+    //         ->columnSpanFull(),
+
+    Section::make('Client Information')
+    ->icon('heroicon-o-user')
+    ->description('Basic client and solicitor details')
+    ->columns(3)
+    ->schema([
+
+        TextInput::make('ref_no')
+            ->label('Reference No')
+            ->maxLength(100),
+
+        TextInput::make('client_name')
+            ->label('Client Name')
+            ->required()
+            ->maxLength(255)
+            ->columnSpan(2),
+
+        TextInput::make('mobile_number')
+            ->label('Mobile Number')
+            ->tel(),
+
+        TextInput::make('email')
+            ->email()
+            ->label('Client Email')
+            ->columnSpan(2),
+
+        DatePicker::make('date_of_birth')
+            ->label('Date of Birth')
+            ->native(false)
+            ->required(),
+
+        Select::make('solicitor_id')
+            ->label('Solicitor')
+            ->relationship('solicitor', 'name')
+            ->native(false)
+            ->columnSpan(2),
+
+            TextInput::make('sol_ref')
+            ->label('Solicitor Ref')
+            ->maxLength(100),
+
+        // =========================
+        // ✅ Interpreter Toggle
+        // =========================
+        // Toggle::make('interpreter_required')
+        //     ->label('Interpreter Required')
+        //     ->inline(false)
+        //     ->reactive()
+        //     ->columnSpan(2)
+        //     ->afterStateUpdated(function ($state, callable $set) {
+        //         if (!$state) {
+        //             $set('interpreter_id', null);
+        //             $set('interpreter_ref', null);
+        //             $set('interpreter_email', null);
+        //             $set('interpreter_language', null);
+        //         }
+        //     }),
+
+        Select::make('interpreter_required')
+    ->label('Interpreter Required')
+    ->options([
+        1 => 'Yes',
+        0 => 'No',
+    ])
     ->native(false)
-     ->columnSpan(2),
+    ->columnspan(2)
+    ->reactive(),
+
+        // =========================
+        // ✅ Interpreter Fields (Simple)
+        // =========================
+        Grid::make(3)
+            ->schema([
+
+                Select::make('interpreter_id')
+                    ->label('Interpreter')
+                    ->relationship('interpreter', 'interpreter_name')
+                    ->searchable()
+                    ->preload()
+                    ->native(false)
+                    ->required(fn ($get) => $get('interpreter_required'))
+                    ->columnSpan(2),
+
+                TextInput::make('interpreter_ref')
+                    ->label('Interpreter Ref')
+                    ->columnSpan(1),
+                TextInput::make('interpreter_email')
+                ->email()
+                    ->label('Interpreter Email')
+                    ->columnSpan(2),
+                TextInput::make('interpreter_language')
+                    ->label('Interpreter Language')
+                    ->columnSpan(1),
+
+            ])
+            ->visible(fn ($get) => $get('interpreter_required'))
+            ->columnSpanFull(),
+
+        /*
+        =========================
+        🔒 FUTURE (Hybrid Approach)
+        =========================
+
+        Toggle::make('use_existing_interpreter')
+            ->label('Select Existing Interpreter')
+            ->reactive(),
+
+        TextInput::make('interpreter_name'),
+        TextInput::make('interpreter_email'),
+        TextInput::make('interpreter_language'),
+        */
+    // ]);
+    // ])
 
 
                         // FileUpload::make('loi_bundle')
@@ -133,22 +298,44 @@ Select::make('interpreter_id')
 
                         Select::make('claim_type')
                             ->options([
-                                'GP' => 'GP',
-                                'Psychiatrist' => 'Psychiatrist',
-                                'Psychologist' => 'Psychologist',
-                                'X-Ray review' => 'X-Ray review',
-                                'Country Expert' => 'Country Expert',
+                                 'immigration' => 'Immigration',
+        'family_criminal' => 'Family & Criminal Cases',
+        'addendum_waiver' => 'Addendum / Waiver Form',
                             ])
                             ->searchable()
-                            ->required(),
+                            ->required()
+                            ->columnSpan(2),
 
                         TextInput::make('expert_name')
                             ->label('Expert')
                             ->columnSpan(2),
 
+                            Select::make('speciality')
+    ->label('Speciality')
+    ->options([
+        'Social Work Reports' => 'Social Work Reports',
+        'Orthopaedics' => 'Orthopaedics',
+        'Psychiatry' => 'Psychiatry',
+        'Psychology' => 'Psychology',
+        'Physiotherapy' => 'Physiotherapy',
+        'Country Expert' => 'Country Expert',
+        'GP Reports' => 'GP Reports',
+        'Probation Reports' => 'Probation Reports',
+        'Detention Centre Assessment' => 'Detention Centre Assessment',
+        'Family & Criminal Law' => 'Family & Criminal Law',
+        'Scar Report' => 'Scar Report',
+        'ADHD/Anxiety/Stress/mental health awareness report' => 'ADHD/Anxiety/Stress/mental health awareness report',
+        'Forensic Scientist' => 'Forensic Scientist',
+        'Forensic Psychiatrist' => 'Forensic Psychiatrist',
+    ])
+    ->required()
+    ->native(false)
+    ->columnSpan(2),
+
                         DatePicker::make('instruction_date')
                             ->label('Date of Instruction')
-                            ->native(false),
+                            ->native(false)
+                            ->columnSpan(2),
                     ]),
 
                 /* =========================
@@ -165,16 +352,9 @@ Select::make('interpreter_id')
                             ->native(false),
 
                         TimePicker::make('appointment_time')
+                        ->label('Appointment Time')
                             ->placeholder('e.g. 10:00 AM or 6–8 PM')
                             ->seconds(false),
-
-                        Select::make('venue')
-                            ->options([
-                                'Remote' => 'Remote',
-                                'In Person' => 'In Person',
-                            ])
-                            ->default('Remote')
-                            ->native(false),
 
                         Select::make('medical_attended')
                             ->label('Medical Attended')
@@ -182,6 +362,73 @@ Select::make('interpreter_id')
                                 'yes' => 'Yes',
                                 'no' => 'No',
                             ])->native(false),
+
+                             // ✅ UPDATED VENUE
+        Select::make('venue')
+            ->label('Venue')
+            ->options([
+                'remote' => 'Remote',
+                'prison' => 'Prison',
+                'face_to_face' => 'Face to Face',
+            ])
+            ->placeholder('Select Venue')
+            ->native(false)
+            ->reactive()
+            ->afterStateUpdated(function ($state, callable $set) {
+                // reset all dependent fields
+                $set('remote_type', null);
+                $set('remote_link', null);
+                $set('prison_name', null);
+                $set('prison_number', null);
+                $set('prison_address', null);
+                $set('prison_link', null);
+            }),
+
+        // =========================
+        // ✅ REMOTE TYPE
+        // =========================
+        Select::make('remote_type')
+            ->label('Remote Type')
+            ->options([
+                'video' => 'Video Link',
+                'whatsapp' => 'WhatsApp Video Call',
+                'zoom' => 'Zoom / Google Meet',
+            ])
+            ->native(false)
+            ->visible(fn ($get) => $get('venue') === 'remote')
+            ->reactive(),
+
+        TextInput::make('remote_link')
+            ->label('Link')
+            ->placeholder('Paste meeting link here')
+            ->visible(fn ($get) =>
+                $get('venue') === 'remote' && $get('remote_type')
+            )
+            ->columnSpanFull(),
+
+        // =========================
+        // ✅ PRISON FIELDS
+        // =========================
+        Grid::make(2)
+            ->schema([
+
+                TextInput::make('prison_name')
+                    ->label('Prison Name'),
+
+                TextInput::make('prison_number')
+                    ->label('Prison Number'),
+
+                TextInput::make('prison_address')
+                    ->label('Prison Address')
+                    ->columnSpanFull(),
+
+                TextInput::make('prison_link')
+                    ->label('Prison Link')
+                    ->columnSpanFull(),
+
+            ])
+            ->visible(fn ($get) => $get('venue') === 'prison')
+            ->columnSpanFull(),
                     ]),
 
                 /* =========================
@@ -198,11 +445,15 @@ Select::make('interpreter_id')
 
                         Select::make('invoice_status')
                             ->options([
-                                'Paid' => 'Paid',
-                                'Sent' => 'Sent',
-                                'Pending' => 'Pending',
+                                'quotation_sent' => 'Quotation Sent',
+    'awaiting_payment' => 'Awaiting Payment',
+    'payment_received' => 'Payment Received',
+    'partial_payment_received' => 'Partial Payment Received',
+    'case_settled' => 'Case Settled',
                             ])
-                            ->default('Pending')
+                            ->searchable()
+                            ->label('Invoice Status')
+    ->placeholder('Select Invoice Status')
                             ->native(false),
 
                         DatePicker::make('invoice_sent_date')
@@ -216,11 +467,12 @@ Select::make('interpreter_id')
                                 'On Hold' => 'On Hold',
                                 'Pending' => 'Pending',
                             ])
-                            ->default('Pending')
+                            ->placeholder('Select an option')
+                            ->label('Current Status')
                             ->native(false),
                     ]),
 
-                Section::make('Cleint Documents')
+                Section::make('Client Documents')
                     ->icon('heroicon-o-pencil-square')
                     ->schema([
 
@@ -272,10 +524,13 @@ Select::make('interpreter_id')
 
                         Select::make('report_status')
                             ->options([
-                                'sent' => 'Sent',
-                                'pending' => 'Pending',
-                                'yes' => 'Yes',
+                               'awaiting_appointment' => 'Awaiting Appointment',
+    'awaiting_report' => 'Awaiting Report',
+    'report_vetting' => 'Report Vetting',
+    'report_sent' => 'Report Sent',
+    'amendment_required' => 'Amendment Required',
                             ])
+                            ->label('Report Status')
                             ->native(false),
 
                         DatePicker::make('report_sent_date')
@@ -342,6 +597,11 @@ Select::make('interpreter_id')
                 TextColumn::make('expert_name')
                     ->label('Expert')
                     ->toggleable(),
+
+                    TextColumn::make('speciality')
+                ->label('Speciality')
+                ->sortable()
+                ->searchable(),
 
                 TextColumn::make('instruction_date')
                     ->date()

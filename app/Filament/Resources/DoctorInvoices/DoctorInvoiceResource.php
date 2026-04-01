@@ -31,7 +31,7 @@ class DoctorInvoiceResource extends BaseResource
 {
     protected static ?string $model = DoctorInvoice::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocument;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocument;
 
     public static function form(Schema $schema): Schema
     {

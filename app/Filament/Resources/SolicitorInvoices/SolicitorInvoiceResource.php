@@ -35,7 +35,7 @@ class SolicitorInvoiceResource extends BaseResource
 {
     protected static ?string $model = SolicitorInvoice::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::DocumentText;
 
     public static function form(Schema $schema): Schema
 {
@@ -105,9 +105,17 @@ class SolicitorInvoiceResource extends BaseResource
                     ->extraAttributes(['class' => 'py-3 text-base'])
                     ->columnSpan(1),
 
+                    Select::make('solicitor_id')
+    ->label('Solicitor')
+    ->relationship('solicitor', 'name') // change 'name' if different
+    ->searchable()
+    ->preload()
+    ->required()
+    ->native(false),
+
                 Textarea::make('solicitor_address')
-                    ->rows(3)
-                    ->columnSpanFull()
+                    // ->rows(3)
+                    // ->columnSpanFull()
                     ->extraAttributes(['class' => 'py-3 text-base']),
             ])
             ->compact(false),
@@ -124,7 +132,7 @@ class SolicitorInvoiceResource extends BaseResource
     ->numeric()
     ->prefix('£')
     ->required()
-    ->live()
+    ->live(onBlur: true)
     ->extraAttributes(['class' => 'py-4 text-lg'])
     ->afterStateUpdated(function ($state, callable $set, callable $get) {
 
@@ -159,9 +167,9 @@ class SolicitorInvoiceResource extends BaseResource
                 Select::make('vat_rate')
     ->label('VAT Rate (%)')
     ->options([
-        0 => '0%',
-        10 => '10%',
-        20 => '20%',
+        '0' => '0%',
+    '10' => '10%',
+    '20' => '20%',
     ])
     ->default(0)
     ->required()
@@ -236,6 +244,9 @@ class SolicitorInvoiceResource extends BaseResource
                     ->label('Ref')
                     ->searchable(),
 
+                    TextColumn::make('solicitor.name')
+    ->label('Solicitor'),
+
                 TextColumn::make('client.client_name')
                 ->label('Client')
                 ->searchable()
@@ -267,6 +278,12 @@ class SolicitorInvoiceResource extends BaseResource
                         'success' => 'paid',
                         'danger'  => 'unpaid',
                     ]),
+
+                    TextColumn::make('created_at')
+                    ->label('Created Date')
+                ->date()
+                ->searchable()
+                ->sortable(),
                     IconColumn::make('client_invoice_files')
     ->label('Client Invoice')
     ->boolean(fn ($record) => ! empty($record->client_invoice_files))

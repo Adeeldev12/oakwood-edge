@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
@@ -12,8 +12,8 @@ class Client extends Model
     use HasFactory;
 
     protected $casts = [
-    'loi_bundle' => 'array',
-];
+        'loi_bundle' => 'array',
+    ];
 
     protected $fillable = [
         'client_name',
@@ -38,26 +38,40 @@ class Client extends Model
         'notes',
         'loi_bundle',
         'medical_records',
-    'supporting_records',
+        'supporting_records',
+        'speciality',
+        'date_of_birth',
+        'interpreter_required',
+        'interpreter_ref',
+        'interpreter_name',
+        'interpreter_email',
+        'interpreter_language',
+        'remote_type',
+        'remote_link',
+        'prison_name',
+        'prison_number',
+        'prison_address',
+        'prison_link',
+
     ];
 
-       public function solicitor()
+    public function solicitor()
     {
         return $this->belongsTo(Solicitor::class);
     }
 
     public function doctorInvoices()
-{
-    return $this->hasMany(DoctorInvoice::class);
-}
+    {
+        return $this->hasMany(DoctorInvoice::class);
+    }
 
-public function solicitorInvoices()
-{
-    return $this->hasMany(SolicitorInvoice::class);
-}
+    public function solicitorInvoices()
+    {
+        return $this->hasMany(SolicitorInvoice::class);
+    }
 
-public function interpreter()
-{
-    return $this->belongsTo(Interpreter::class);
-}
+    public function interpreter()
+    {
+        return $this->belongsTo(Interpreter::class);
+    }
 }
