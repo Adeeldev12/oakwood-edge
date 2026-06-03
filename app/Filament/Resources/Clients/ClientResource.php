@@ -562,9 +562,9 @@ class ClientResource extends BaseResource
                     ->columns(1)
                     ->schema([
                     DatePicker::make('trial_ends_at')
-    ->label('Trial Ends At')
+    ->label('Trial Ends At'),
     // ->timezone('Asia/Karachi')
-    ->required(),
+    // ->required(),
                     ]),
 
                 //     /* =========================
