@@ -23,6 +23,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Storage;
@@ -201,12 +202,117 @@ class DoctorInvoiceResource extends BaseResource
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
-                SelectFilter::make('payment_status')
-                    ->options([
-                        'paid' => 'Paid',
-                        'unpaid' => 'Unpaid',
-                    ]),
+                Filter::make('invoice_date')
+        ->form([
+            DatePicker::make('start_date')
+                ->label('Start Date'),
+
+            DatePicker::make('end_date')
+                ->label('End Date'),
+        ])
+        ->query(function ($query, array $data) {
+
+            return $query
+                ->when(
+                    $data['start_date'],
+                    fn ($query, $date) =>
+                        $query->whereDate('created_at', '>=', $date)
+                )
+                ->when(
+                    $data['end_date'],
+                    fn ($query, $date) =>
+                        $query->whereDate('created_at', '<=', $date)
+                );
+        }),
+
+    SelectFilter::make('doctor_id')
+        ->label('Doctor')
+        ->relationship('doctor', 'name')
+        ->searchable()
+        ->preload(),
+
+    // SelectFilter::make('payment_status')
+    //     ->options([
+    //         'paid' => 'Paid',
+    //         'unpaid' => 'Unpaid',
+    //     ]),
             ])
+            ->headerActions([
+
+    Action::make('printReport')
+
+        ->label('Print Report')
+
+        ->icon('heroicon-o-printer')
+
+        ->color('success')
+
+        ->modalHeading('Doctor Invoice Report')
+
+        ->modalWidth('7xl')
+
+        ->modalSubmitAction(false)
+
+        ->modalCancelActionLabel('Close')
+
+        ->modalContent(function ($livewire) {
+
+            $filters = $livewire->tableFilters;
+
+            $query = \App\Models\DoctorInvoice::query()
+                ->with(['doctor', 'client']);
+
+            // DATE FILTERS
+            if (! empty($filters['date_range']['start_date'])) {
+
+                $query->whereDate(
+                    'created_at',
+                    '>=',
+                    $filters['date_range']['start_date']
+                );
+            }
+
+            if (! empty($filters['date_range']['end_date'])) {
+
+                $query->whereDate(
+                    'created_at',
+                    '<=',
+                    $filters['date_range']['end_date']
+                );
+            }
+
+            // DOCTOR FILTER
+            if (! empty($filters['doctor_id']['value'])) {
+
+                $query->where(
+                    'doctor_id',
+                    $filters['doctor_id']['value']
+                );
+            }
+
+            // PAYMENT STATUS FILTER
+            if (! empty($filters['payment_status']['value'])) {
+
+                $query->where(
+                    'payment_status',
+                    $filters['payment_status']['value']
+                );
+            }
+
+            $records = $query->get();
+
+            $totalAmount = $records->sum('total_amount');
+
+            return view(
+                'filament.reports.doctor-invoice-report',
+                [
+                    'records' => $records,
+                    'totalAmount' => $totalAmount,
+                ]
+            );
+        }),
+
+])
             ->actions([
                 EditAction::make()
                     ->visible(fn () => auth()->user()?->isAdmin() || auth()->user()?->isSuperAdmin()

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Client;
+use App\Observers\ClientObserver;
 use App\Observers\GlobalModelObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
@@ -23,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         // Model::observe(GlobalModelObserver::class);
+         Client::observe(ClientObserver::class);
     }
 }

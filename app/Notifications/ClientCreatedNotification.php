@@ -2,63 +2,28 @@
 
 namespace App\Notifications;
 
+use App\Models\Client;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class ClientCreatedNotification extends Notification
 {
     use Queueable;
 
-    /**
-     * Create a new notification instance.
-     */
-   public function __construct(public $clientName) {}
+    public function __construct(
+        public Client $client
+    ) {}
 
-public function via($notifiable)
-{
-    return ['database'];
-}
-
-public function toDatabase($notifiable)
-{
-    return [
-        'title' => 'New Client Added',
-        'message' => "Client {$this->clientName} has been created.",
-    ];
-}
-
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
-    // public function via(object $notifiable): array
-    // {
-    //     return ['mail'];
-    // }
-
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
+    public function via(object $notifiable): array
     {
-        return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+        return ['database'];
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    public function toDatabase(object $notifiable): array
     {
         return [
-            //
+            'title' => 'New Client Created',
+            'body' => 'Client "' . $this->client->client_name . '" was created.',
         ];
     }
 }

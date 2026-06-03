@@ -31,6 +31,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Filament\Forms\Components\DateTimePicker;
 
 class ClientResource extends BaseResource
 {
@@ -190,6 +191,7 @@ class ClientResource extends BaseResource
             ->label('Solicitor Ref')
             ->maxLength(100),
 
+
         // =========================
         // ✅ Interpreter Toggle
         // =========================
@@ -242,6 +244,22 @@ class ClientResource extends BaseResource
                 TextInput::make('interpreter_language')
                     ->label('Interpreter Language')
                     ->columnSpan(1),
+
+                       // ✅ NEW FIELD: Interpreter Number
+        TextInput::make('interpreter_number')
+            ->label('Interpreter Number')
+            ->tel()
+            ->columnSpan(2)
+            ->maxLength(20),
+
+        // ✅ NEW FIELD: Interpreter Pay By
+        Select::make('interpreter_pay_by')
+            ->label('Interpreter Pay By')
+            ->options([
+                'us' => 'Us',
+                'solicitor' => 'Solicitor',
+            ])
+            ->native(false),
 
             ])
             ->visible(fn ($get) => $get('interpreter_required'))
@@ -538,6 +556,17 @@ class ClientResource extends BaseResource
                             ->native(false),
                     ]),
 
+                    Section::make('Trial Date')
+                    ->icon('heroicon-o-clipboard-document-check')
+                    // ->description('Report delivery and progress')
+                    ->columns(1)
+                    ->schema([
+                    DatePicker::make('trial_ends_at')
+    ->label('Trial Ends At')
+    // ->timezone('Asia/Karachi')
+    ->required(),
+                    ]),
+
                 //     /* =========================
                 //  | Notes
                 //  ========================= */
@@ -660,7 +689,8 @@ class ClientResource extends BaseResource
                     ->falseColor('danger'),
 
             ])
-            ->defaultSort('instruction_date', 'desc')
+            // ->defaultSort('instruction_date', 'desc')
+            ->defaultSort('id', 'desc')
             ->filters([])
             ->actions([
                 ViewAction::make(),

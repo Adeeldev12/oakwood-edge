@@ -11,7 +11,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
+// use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -28,11 +28,13 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->authGuard('web') // 👈 ADD THIS
             ->brandLogo(asset('images/OakWood-Logo-Hq-1.webp'))
             ->brandName('Oakwood Edge')
             ->brandLogoHeight('5rem')
             ->favicon(asset('images/OakWood Logo Logo Mark (1).webp'))
-            
+            ->databaseNotifications()
+            // ->databaseNotificationsPolling('5s')
             ->colors([
                 'primary' => Color::Amber,
             ])

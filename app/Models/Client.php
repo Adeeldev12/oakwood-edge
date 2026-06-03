@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
+use App\Observers\ClientNotificationObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Client extends Model
 {
     //
 
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected $casts = [
         'loi_bundle' => 'array',
+        'trial_ends_at' => 'datetime',
     ];
 
     protected $fillable = [
@@ -52,9 +55,16 @@ class Client extends Model
         'prison_number',
         'prison_address',
         'prison_link',
+        'trial_ends_at',
+        'interpreter_number',
+        'interpreter_pay_by',
 
     ];
 
+    protected static function booted(): void
+{
+    static::observe(ClientNotificationObserver::class);
+}
     public function solicitor()
     {
         return $this->belongsTo(Solicitor::class);
@@ -73,5 +83,19 @@ class Client extends Model
     public function interpreter()
     {
         return $this->belongsTo(Interpreter::class);
+    }
+
+     // ✅ ADD HERE
+    public function isTrialExpiringSoon()
+    {
+        return $this->trial_ends_at &&
+            now()->diffInDays($this->trial_ends_at, false) <= 2 &&
+            now()->lessThanOrEqualTo($this->trial_ends_at);
+    }
+
+    public function isTrialExpired()
+    {
+        return $this->trial_ends_at &&
+            $this->trial_ends_at->isPast();
     }
 }
