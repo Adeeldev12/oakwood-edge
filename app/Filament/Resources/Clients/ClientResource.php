@@ -157,9 +157,9 @@ class ClientResource extends BaseResource
     ->columns(3)
     ->schema([
 
-        TextInput::make('ref_no')
-            ->label('Reference No')
-            ->maxLength(100),
+        // TextInput::make('ref_no')
+        //     ->label('Reference No')
+        //     ->maxLength(100),
 
         TextInput::make('client_name')
             ->label('Client Name')
@@ -597,9 +597,14 @@ class ClientResource extends BaseResource
                     ->searchable()
                     ->sortable(),
 
+                // TextColumn::make('ref_no')
+                //     ->label('Ref No')
+                //     ->searchable(),
+
                 TextColumn::make('ref_no')
-                    ->label('Ref No')
-                    ->searchable(),
+    ->label('Reference No')
+    ->formatStateUsing(fn ($state) => 'OE' . str_pad($state, 3, '0', STR_PAD_LEFT)),
+
 
                 TextColumn::make('solicitor.name')
                     ->label('Solicitor')

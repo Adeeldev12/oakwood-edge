@@ -64,6 +64,13 @@ class Client extends Model
     protected static function booted(): void
 {
     static::observe(ClientNotificationObserver::class);
+
+    static::creating(function (Client $client) {
+    $lastRef = static::max('ref_no');
+
+    $client->ref_no = $lastRef ? ((int) $lastRef + 1) : 1;
+});
+
 }
     public function solicitor()
     {
