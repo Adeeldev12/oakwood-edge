@@ -17,6 +17,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -89,6 +90,13 @@ class SolicitorInvoiceResource extends BaseResource
                     ->extraAttributes(['class' => 'py-3 text-base'])
                     ->columnSpan(1),
 
+                    Select::make('doctor_id')
+    ->label('Doctor')
+    ->relationship('doctor', 'name')
+    ->searchable()
+    ->preload()
+    ->nullable(),
+
                 Select::make('expert_type')
                     ->options([
                         'psychiatrist' => 'Psychiatrist',
@@ -122,94 +130,219 @@ class SolicitorInvoiceResource extends BaseResource
 
 
 
-        Section::make('Financial Details')
-            ->icon('heroicon-o-banknotes')
-            ->columns(3)
+    //     Section::make('Financial Details')
+    //         ->icon('heroicon-o-banknotes')
+    //         ->columns(3)
+    //         ->schema([
+
+    // //             TextInput::make('amount')
+    // // ->label('Base Amount')
+    // // ->numeric()
+    // // ->prefix('£')
+    // // ->required()
+    // // ->live(onBlur: true)
+    // // ->extraAttributes(['class' => 'py-4 text-lg'])
+    // // ->afterStateUpdated(function ($state, callable $set, callable $get) {
+
+    // //     $vatRate = (float) ($get('vat_rate') ?? 0);
+    // //     $amount = (float) $state;
+
+    // //     if ($vatRate == 0) {
+    // //         $set('vat_amount', 0);
+    // //         $set('total_amount', $amount);
+    // //         return;
+    // //     }
+
+    // //     $vatAmount = ($amount * $vatRate) / 100;
+
+    // //     $set('vat_amount', round($vatAmount, 2));
+    // //     $set('total_amount', round($amount + $vatAmount, 2));
+    // // })
+    // // ->columnSpan(1),
+    // Repeater::make('items')
+    // ->relationship()
+    // ->label('Products / Services')
+    // ->schema([
+    //     TextInput::make('description')
+    //         ->label('Product / Service')
+    //         ->required(),
+
+    //     TextInput::make('price')
+    //         ->label('Price')
+    //         ->numeric()
+    //         ->prefix('£')
+    //         ->required(),
+    // ])
+    // ->columns(2)
+    // ->defaultItems(1)
+    // ->addActionLabel('Add Product / Service')
+    // ->reorderable(false)
+    // ->columnSpanFull(),
+
+    //             // TextInput::make('vat_rate')
+    //             //     ->label('VAT Rate (%)')
+    //             //     ->numeric()
+    //             //     ->default(0)
+    //             //     ->live()
+    //             //     ->extraAttributes(['class' => 'py-4 text-lg'])
+    //             //     ->afterStateUpdated(function ($state, callable $set, callable $get) {
+    //             //         $amount = $get('amount') ?? 0;
+    //             //         $vatAmount = ($amount * $state) / 100;
+    //             //         $set('vat_amount', round($vatAmount, 2));
+    //             //         $set('total_amount', round($amount + $vatAmount, 2));
+    //             //     })
+    //             Select::make('vat_rate')
+    // ->label('VAT Rate (%)')
+    // ->options([
+    //     '0' => '0%',
+    // '10' => '10%',
+    // '20' => '20%',
+    // ])
+    // ->default(0)
+    // ->required()
+    // ->native(false)
+    // ->live()
+    // ->afterStateUpdated(function ($state, callable $set, callable $get) {
+
+    //     $amount = (float) ($get('amount') ?? 0);
+
+    //     if ($state == 0) {
+    //         $set('vat_amount', 0);
+    //         $set('total_amount', $amount);
+    //         return;
+    //     }
+
+    //     $vatAmount = ($amount * $state) / 100;
+
+    //     $set('vat_amount', round($vatAmount, 2));
+    //     $set('total_amount', round($amount + $vatAmount, 2));
+    // })
+    // ->columnSpan(1),
+
+    //             TextInput::make('vat_amount')
+    //                 ->numeric()
+    //                 ->prefix('£')
+    //                 ->readOnly()
+    //                 ->extraAttributes(['class' => 'py-4 text-lg bg-gray-100'])
+    //                 ->columnSpan(1),
+
+    //             TextInput::make('total_amount')
+    //                 ->numeric()
+    //                 ->prefix('£')
+    //                 ->readOnly()
+    //                 ->columnSpanFull()
+    //                 ->extraAttributes([
+    //                     'class' => 'py-5 text-xl font-bold bg-primary-50 border-primary-300'
+    //                 ]),
+    //         ])
+    //         ->compact(false),
+
+    Section::make('Financial Details')
+    ->icon('heroicon-o-banknotes')
+    ->columns(3)
+    ->schema([
+
+        Repeater::make('items')
+            ->relationship()
+            ->label('Products / Services')
             ->schema([
 
-                TextInput::make('amount')
-    ->label('Base Amount')
-    ->numeric()
-    ->prefix('£')
-    ->required()
-    ->live(onBlur: true)
-    ->extraAttributes(['class' => 'py-4 text-lg'])
-    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                Textarea::make('description')
+                    ->label('Product / Service')
+                    ->required(),
 
-        $vatRate = (float) ($get('vat_rate') ?? 0);
-        $amount = (float) $state;
-
-        if ($vatRate == 0) {
-            $set('vat_amount', 0);
-            $set('total_amount', $amount);
-            return;
-        }
-
-        $vatAmount = ($amount * $vatRate) / 100;
-
-        $set('vat_amount', round($vatAmount, 2));
-        $set('total_amount', round($amount + $vatAmount, 2));
-    })
-    ->columnSpan(1),
-
-                // TextInput::make('vat_rate')
-                //     ->label('VAT Rate (%)')
-                //     ->numeric()
-                //     ->default(0)
-                //     ->live()
-                //     ->extraAttributes(['class' => 'py-4 text-lg'])
-                //     ->afterStateUpdated(function ($state, callable $set, callable $get) {
-                //         $amount = $get('amount') ?? 0;
-                //         $vatAmount = ($amount * $state) / 100;
-                //         $set('vat_amount', round($vatAmount, 2));
-                //         $set('total_amount', round($amount + $vatAmount, 2));
-                //     })
-                Select::make('vat_rate')
-    ->label('VAT Rate (%)')
-    ->options([
-        '0' => '0%',
-    '10' => '10%',
-    '20' => '20%',
-    ])
-    ->default(0)
-    ->required()
-    ->native(false)
-    ->live()
-    ->afterStateUpdated(function ($state, callable $set, callable $get) {
-
-        $amount = (float) ($get('amount') ?? 0);
-
-        if ($state == 0) {
-            $set('vat_amount', 0);
-            $set('total_amount', $amount);
-            return;
-        }
-
-        $vatAmount = ($amount * $state) / 100;
-
-        $set('vat_amount', round($vatAmount, 2));
-        $set('total_amount', round($amount + $vatAmount, 2));
-    })
-    ->columnSpan(1),
-
-                TextInput::make('vat_amount')
+                TextInput::make('price')
+                    ->label('Price')
                     ->numeric()
                     ->prefix('£')
-                    ->readOnly()
-                    ->extraAttributes(['class' => 'py-4 text-lg bg-gray-100'])
-                    ->columnSpan(1),
+                    ->required()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
 
-                TextInput::make('total_amount')
-                    ->numeric()
-                    ->prefix('£')
-                    ->readOnly()
-                    ->columnSpanFull()
-                    ->extraAttributes([
-                        'class' => 'py-5 text-xl font-bold bg-primary-50 border-primary-300'
-                    ]),
+                        $items = $get('../../items') ?? [];
+
+                        $amount = collect($items)->sum(function ($item) {
+                            return (float) ($item['price'] ?? 0);
+                        });
+
+                        $vatRate = (float) ($get('../../vat_rate') ?? 0);
+
+                        $vatAmount = ($amount * $vatRate) / 100;
+
+                        $set('../../amount', round($amount, 2));
+                        $set('../../vat_amount', round($vatAmount, 2));
+                        $set('../../total_amount', round($amount + $vatAmount, 2));
+                    }),
+
             ])
-            ->compact(false),
+            ->columns(2)
+            ->defaultItems(1)
+            ->addActionLabel('Add Product / Service')
+            ->reorderable(false)
+            ->columnSpanFull(),
 
+            TextInput::make('amount')
+            ->label('Total')
+            ->numeric()
+            ->prefix('£')
+            ->readOnly()
+            ->extraAttributes([
+                'class' => 'py-4 text-lg bg-gray-100'
+            ])
+            ->columnSpan(1),
+
+        Select::make('vat_rate')
+            ->label('VAT Rate (%)')
+            ->options([
+                '0' => '0%',
+                '10' => '10%',
+                '20' => '20%',
+            ])
+            ->default('0')
+            ->required()
+            ->native(false)
+            ->live()
+            ->afterStateUpdated(function ($state, callable $set, callable $get) {
+
+                $items = $get('items') ?? [];
+
+                $amount = collect($items)->sum(function ($item) {
+                    return (float) ($item['price'] ?? 0);
+                });
+
+                $vatRate = (float) $state;
+
+                $vatAmount = ($amount * $vatRate) / 100;
+
+                $set('amount', round($amount, 2));
+                $set('vat_amount', round($vatAmount, 2));
+                $set('total_amount', round($amount + $vatAmount, 2));
+            })
+            ->columnSpan(1),
+
+
+        TextInput::make('vat_amount')
+            ->label('VAT Amount')
+            ->numeric()
+            ->prefix('£')
+            ->readOnly()
+            ->extraAttributes([
+                'class' => 'py-4 text-lg bg-gray-100'
+            ])
+            ->columnSpan(1),
+
+        TextInput::make('total_amount')
+            ->label('Sub Total')
+            ->numeric()
+            ->prefix('£')
+            ->readOnly()
+            ->columnSpanFull()
+            ->extraAttributes([
+                'class' => 'py-5 text-xl font-bold bg-primary-50 border-primary-300'
+            ]),
+
+    ])
+    ->compact(false),
 
 
         Section::make('Attachments & Notes')
@@ -320,6 +453,39 @@ class SolicitorInvoiceResource extends BaseResource
     ->openUrlInNewTab()
     ->visible(fn ($record) => ! empty($record->client_invoice_files)),
 
+    // Action::make('downloadInvoice')
+    // ->label('Invoice')
+    // ->icon('heroicon-o-arrow-down-tray')
+    // ->color('primary')
+    // ->action(function ($record) {
+
+    //     $pdf = Pdf::loadView('invoices.solicitor-invoice', [
+    //         'invoice' => $record,
+    //     ]);
+
+    //     return response()->streamDownload(
+    //         fn () => print ($pdf->output()),
+    //         'solicitor-invoice-' . $record->invoice_no . '.pdf'
+    //     );
+    // }),
+
+    Action::make('downloadQuotation')
+    ->label('Quotation')
+    ->icon('heroicon-o-document-text')
+    ->color('success')
+    ->action(function ($record) {
+
+        $pdf = Pdf::loadView('invoices.solicitor-invoice', [
+            'invoice' => $record,
+            'documentType' => 'QUOTATION',
+        ]);
+
+        return response()->streamDownload(
+            fn () => print ($pdf->output()),
+            'solicitor-quotation-' . $record->invoice_no . '.pdf'
+        );
+    }),
+
     Action::make('downloadInvoice')
     ->label('Invoice')
     ->icon('heroicon-o-arrow-down-tray')
@@ -328,6 +494,7 @@ class SolicitorInvoiceResource extends BaseResource
 
         $pdf = Pdf::loadView('invoices.solicitor-invoice', [
             'invoice' => $record,
+            'documentType' => 'INVOICE',
         ]);
 
         return response()->streamDownload(
@@ -335,6 +502,7 @@ class SolicitorInvoiceResource extends BaseResource
             'solicitor-invoice-' . $record->invoice_no . '.pdf'
         );
     }),
+
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),

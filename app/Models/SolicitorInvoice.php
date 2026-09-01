@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SolicitorInvoice extends Model
 {
@@ -26,6 +27,7 @@ class SolicitorInvoice extends Model
         'vat_amount',
         'total_amount',
         'solicitor_id',
+        'doctor_id',
     ];
 
     public function client()
@@ -37,4 +39,15 @@ class SolicitorInvoice extends Model
 {
     return $this->belongsTo(Solicitor::class);
 }
+
+public function items(): HasMany
+{
+    return $this->hasMany(SolicitorInvoiceItem::class);
+}
+
+public function doctor()
+{
+    return $this->belongsTo(Doctor::class);
+}
+
 }
