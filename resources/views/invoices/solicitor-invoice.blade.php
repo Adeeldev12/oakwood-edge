@@ -291,58 +291,58 @@
         }
 
         /* =========================================
-   EXPERT REPORT - VERY COMPACT
-========================================= */
+           EXPERT REPORT - VERY COMPACT
+        ========================================= */
 
-.expert-report {
-    width: 100%;
-    border: 1px solid #d9e2ec;
-    margin: 10px 0 12px 0;
-    page-break-inside: avoid;
-}
+        .expert-report {
+            width: 100%;
+            border: 1px solid #d9e2ec;
+            margin: 10px 0 12px 0;
+            page-break-inside: avoid;
+        }
 
-.expert-report-title {
-    background-color: #1f4e78;
-    color: #ffffff;
-    text-align: center;
-    padding: 5px 8px;
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-}
+        .expert-report-title {
+            background-color: #1f4e78;
+            color: #ffffff;
+            text-align: center;
+            padding: 5px 8px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
 
-.expert-report-info {
-    width: 100%;
-    border-collapse: collapse;
-}
+        .expert-report-info {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-.expert-report-info td {
-    width: 33.33%;
-    padding: 5px 8px;
-    vertical-align: middle;
-    border-right: 1px solid #e5e7eb;
-}
+        .expert-report-info td {
+            width: 33.33%;
+            padding: 5px 8px;
+            vertical-align: middle;
+            border-right: 1px solid #e5e7eb;
+        }
 
-.expert-report-info td:last-child {
-    border-right: none;
-}
+        .expert-report-info td:last-child {
+            border-right: none;
+        }
 
-.report-label {
-    display: block;
-    font-size: 8px;
-    text-transform: uppercase;
-    color: #777;
-    font-weight: bold;
-    margin-bottom: 2px;
-}
+        .report-label {
+            display: block;
+            font-size: 8px;
+            text-transform: uppercase;
+            color: #777;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
 
-.report-value {
-    display: block;
-    font-size: 10px;
-    font-weight: bold;
-    color: #222;
-    line-height: 1.15;
-}
+        .report-value {
+            display: block;
+            font-size: 10px;
+            font-weight: bold;
+            color: #222;
+            line-height: 1.15;
+        }
 
     </style>
 </head>
@@ -471,22 +471,22 @@
             </div>
 
 
-          <!-- PAYMENT STATUS -->
+            <!-- PAYMENT STATUS -->
 
-@if(($documentType ?? 'INVOICE') === 'INVOICE')
+            @if(($documentType ?? 'INVOICE') === 'INVOICE')
 
-    <div>
+                <div>
 
-        <span
-            class="status-box
-            {{ $invoice->payment_status === 'paid' ? 'paid' : 'unpaid' }}"
-        >
-            {{ strtoupper($invoice->payment_status ?? 'UNPAID') }}
-        </span>
+                    <span
+                        class="status-box
+                        {{ $invoice->payment_status === 'paid' ? 'paid' : 'unpaid' }}"
+                    >
+                        {{ strtoupper($invoice->payment_status ?? 'UNPAID') }}
+                    </span>
 
-    </div>
+                </div>
 
-@endif
+            @endif
 
 
         </div>
@@ -504,65 +504,52 @@
 
 
     <!-- =====================================================
-         EXPERT REPORT INFORMATION
+         EXPERT MEDICAL REPORT / QUOTATION
     ====================================================== -->
 
-    {{-- <div class="expert-report">
-
-        <!-- REPORT TITLE -->
+    <div class="expert-report">
 
         <div class="expert-report-title">
-            EXPERT MEDICAL REPORT
+
+            @if(($documentType ?? 'INVOICE') === 'QUOTATION')
+
+                EXPERT MEDICAL QUOTATION
+
+            @else
+
+                EXPERT MEDICAL INVOICE
+
+            @endif
+
         </div>
-
-
-        <!-- REPORT SUBTITLE -->
-
-        <div class="expert-report-subtitle">
-            Expert report prepared for the client
-        </div>
-
-
-        <!-- REPORT INFORMATION -->
 
         <table class="expert-report-info">
 
             <tr>
 
-                <!-- CLIENT -->
-
                 <td>
-
                     <span class="report-label">
                         Client Name
                     </span>
 
                     <span class="report-value">
-                        {{ $invoice->client?->name ?? '-' }}
+                        {{ $invoice->client?->client_name ?? '-' }}
                     </span>
-
                 </td>
 
 
-                <!-- DOCTOR -->
-
                 <td>
-
                     <span class="report-label">
-                        Report Prepared By
+                        Expert
                     </span>
 
                     <span class="report-value">
                         {{ $invoice->doctor?->name ?? '-' }}
                     </span>
-
                 </td>
 
 
-                <!-- EXPERT TYPE -->
-
                 <td>
-
                     <span class="report-label">
                         Expert Type
                     </span>
@@ -570,67 +557,14 @@
                     <span class="report-value">
                         {{ $invoice->expert_type ?? '-' }}
                     </span>
-
                 </td>
 
             </tr>
 
         </table>
 
-    </div> --}}
-
-
-    <!-- =====================================================
-     EXPERT MEDICAL REPORT
-====================================================== -->
-
-<div class="expert-report">
-
-    <div class="expert-report-title">
-        EXPERT MEDICAL REPORT
     </div>
 
-    <table class="expert-report-info">
-
-        <tr>
-
-            <td>
-                <span class="report-label">
-                    Client Name
-                </span>
-
-                <span class="report-value">
-                    {{ $invoice->client?->client_name ?? '-' }}
-                </span>
-            </td>
-
-
-            <td>
-                <span class="report-label">
-                    Expert
-                </span>
-
-                <span class="report-value">
-                    {{ $invoice->doctor?->name ?? '-' }}
-                </span>
-            </td>
-
-
-            <td>
-                <span class="report-label">
-                    Expert Type
-                </span>
-
-                <span class="report-value">
-                    {{ $invoice->expert_type ?? '-' }}
-                </span>
-            </td>
-
-        </tr>
-
-    </table>
-
-</div>
 
     <!-- =====================================================
          PRODUCTS / SERVICES
