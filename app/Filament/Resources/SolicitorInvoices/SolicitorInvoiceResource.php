@@ -351,6 +351,7 @@ class SolicitorInvoiceResource extends BaseResource
 
                 Textarea::make('description')
                     ->rows(4)
+                    ->label('Notes')
                     ->columnSpanFull()
                     ->extraAttributes(['class' => 'py-3 text-base']),
 
