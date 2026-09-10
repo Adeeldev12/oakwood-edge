@@ -10,12 +10,15 @@ use App\Filament\Resources\Clients\Schemas\ClientForm;
 use App\Filament\Resources\Clients\Tables\ClientsTable;
 use App\Models\Client;
 use BackedEnum;
+use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -31,7 +34,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Filament\Forms\Components\DateTimePicker;
 
 class ClientResource extends BaseResource
 {
@@ -177,10 +179,26 @@ class ClientResource extends BaseResource
             ->columnSpan(2),
 
         DatePicker::make('date_of_birth')
-            ->label('Date of Birth')
-            ->native(false)
-            ->required(),
+    ->label('Date of Birth')
+    ->native(false)
+    ->required()
+    ->live(),
 
+Placeholder::make('age_status')
+    ->label('Status')
+    ->content(function ($get) {
+        $dob = $get('date_of_birth');
+
+        if (!$dob) {
+            return '—';
+        }
+
+        $age = Carbon::parse($dob)->age;
+
+        return $age < 18
+            ? 'Underage'
+            : 'Adult';
+    }),
         Select::make('solicitor_id')
             ->label('Solicitor')
             ->relationship('solicitor', 'name')
@@ -597,6 +615,27 @@ class ClientResource extends BaseResource
                     ->searchable()
                     ->sortable(),
 
+                    TextColumn::make('date_of_birth')
+                ->label('Date of Birth')
+                ->date(),
+
+            TextColumn::make('age_eligibility')
+    ->label('Age Eligibility')
+    ->state(function ($record) {
+        if (!$record->date_of_birth) {
+            return '—';
+        }
+
+        return Carbon::parse($record->date_of_birth)->age < 18
+            ? 'Under 18'
+            : 'Adult';
+    })
+    ->badge()
+    ->color(fn ($state) => match ($state) {
+        'Under 18' => 'danger',
+        'Adult' => 'success',
+        default => 'gray',
+    }),
                 // TextColumn::make('ref_no')
                 //     ->label('Ref No')
                 //     ->searchable(),
