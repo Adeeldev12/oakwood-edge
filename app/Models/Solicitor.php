@@ -27,4 +27,10 @@ class Solicitor extends Model
 {
     return $this->hasMany(SolicitorInvoice::class);
 }
+
+public function dmrs()
+{
+    return $this->hasMany(Dmr::class);
+}
+
 }
