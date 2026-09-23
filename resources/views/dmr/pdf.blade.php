@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
 
-    <title>DMR Report - {{ $year }}</title>
+    <title>
+        DMR Report - {{ $year }}
+    </title>
 
     <style>
         @page {
@@ -40,6 +42,17 @@
             float: right;
             font-size: 13px;
             font-weight: bold;
+        }
+
+        /* Report date range */
+        .report-period {
+            margin-top: 8px;
+            color: #e2e8f0;
+            font-size: 9px;
+        }
+
+        .report-period strong {
+            color: #ffffff;
         }
 
         table {
@@ -94,22 +107,62 @@
 
 <body>
 
+    {{-- =====================================================
+         HEADER
+    ====================================================== --}}
+
     <div class="header">
 
+        {{-- Reporting Year --}}
         <div class="year">
             {{ $year }}
         </div>
 
+
+        {{-- Title --}}
         <div class="title">
             DMR Report
         </div>
 
+
+        {{-- Subtitle --}}
         <div class="subtitle">
             Monthly Solicitor Case Report
         </div>
 
+
+        {{-- =================================================
+             DATE FILTER
+        ================================================== --}}
+
+        <div class="report-period">
+
+            @if($startDate && $endDate)
+
+                <strong>Report Period:</strong>
+
+                {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }}
+
+                &nbsp; - &nbsp;
+
+                {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}
+
+            @else
+
+                <strong>Report Period:</strong>
+
+                Full Year {{ $year }}
+
+            @endif
+
+        </div>
+
     </div>
 
+
+    {{-- =====================================================
+         REPORT TABLE
+    ====================================================== --}}
 
     <table>
 
@@ -140,6 +193,10 @@
 
         <tbody>
 
+            {{-- =================================================
+                 SOLICITOR ROWS
+            ================================================== --}}
+
             @foreach($solicitors as $solicitor)
 
                 <tr>
@@ -147,6 +204,7 @@
                     <td class="name">
                         {{ $solicitor->name }}
                     </td>
+
 
                     @foreach($months as $month => $monthName)
 
@@ -156,6 +214,8 @@
 
                     @endforeach
 
+
+                    {{-- Annual Total --}}
                     <td class="total">
 
                         {{
@@ -170,11 +230,16 @@
             @endforeach
 
 
+            {{-- =================================================
+                 GRAND TOTAL
+            ================================================== --}}
+
             <tr>
 
                 <td class="total">
                     TOTAL CASES
                 </td>
+
 
                 @foreach($months as $month => $monthName)
 
@@ -192,6 +257,7 @@
                 @endforeach
 
 
+                {{-- Overall Total --}}
                 <td class="grand-total">
 
                     {{
@@ -209,8 +275,15 @@
     </table>
 
 
+    {{-- =====================================================
+         FOOTER
+    ====================================================== --}}
+
     <div class="footer">
-        Generated on {{ now()->format('d M Y h:i A') }}
+
+        Generated on
+        {{ now()->format('d M Y h:i A') }}
+
     </div>
 
 </body>

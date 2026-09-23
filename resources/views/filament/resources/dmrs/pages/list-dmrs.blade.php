@@ -571,38 +571,95 @@
 
                 <div class="dmr-toolbar-right">
 
-                    <div>
-                        <div class="dmr-year-label">
-                            Reporting Year
-                        </div>
+    {{-- Start Date --}}
+    <div>
+        <div class="dmr-year-label">
+            Start Date
+        </div>
 
-                        <select
-                            wire:model.live="year"
-                            class="dmr-year-select"
-                        >
-                            @foreach(range(now()->year - 2, now()->year + 2) as $yearOption)
-
-                                <option value="{{ $yearOption }}">
-                                    {{ $yearOption }}
-                                </option>
-
-                            @endforeach
-                        </select>
-                    </div>
+        <input
+            type="date"
+            wire:model="startDate"
+            class="dmr-year-select"
+        >
+    </div>
 
 
-                    <div style="padding-top:18px;">
+    {{-- End Date --}}
+    <div>
+        <div class="dmr-year-label">
+            End Date
+        </div>
 
-                        <x-filament::button
-                            wire:click="save"
-                            icon="heroicon-m-check"
-                        >
-                            Save Changes
-                        </x-filament::button>
+        <input
+            type="date"
+            wire:model="endDate"
+            class="dmr-year-select"
+        >
+    </div>
 
-                    </div>
 
-                </div>
+    {{-- Apply Filter --}}
+    <div style="padding-top:18px;">
+
+        <x-filament::button
+            wire:click="applyDateFilter"
+            icon="heroicon-m-funnel"
+        >
+            Apply Filter
+        </x-filament::button>
+
+    </div>
+
+
+    {{-- Clear Filter --}}
+    <div style="padding-top:18px;">
+
+        <x-filament::button
+            wire:click="clearDateFilter"
+            color="gray"
+        >
+            Clear
+        </x-filament::button>
+
+    </div>
+
+
+    {{-- Reporting Year --}}
+    <div>
+        <div class="dmr-year-label">
+            Reporting Year
+        </div>
+
+        <select
+            wire:model.live="year"
+            class="dmr-year-select"
+        >
+            @foreach(range(now()->year - 2, now()->year + 2) as $yearOption)
+
+                <option value="{{ $yearOption }}">
+                    {{ $yearOption }}
+                </option>
+
+            @endforeach
+        </select>
+    </div>
+
+
+    {{-- Save --}}
+    <div style="padding-top:18px;">
+
+        <x-filament::button
+            wire:click="save"
+            icon="heroicon-m-check"
+        >
+            Save Changes
+        </x-filament::button>
+
+    </div>
+
+</div>
+
 
             </div>
 

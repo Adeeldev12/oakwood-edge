@@ -16,6 +16,10 @@ class ListDmrs extends ListRecords
 
     public array $cases = [];
 
+    public ?string $startDate = null;
+
+public ?string $endDate = null;
+
     public function mount(): void
     {
         parent::mount();
@@ -26,34 +30,145 @@ class ListDmrs extends ListRecords
     }
 
     public function loadCases(): void
-    {
-        $solicitors = Solicitor::query()
-            ->orderBy('name')
-            ->get();
+{
+    $solicitors = Solicitor::query()
+        ->orderBy('name')
+        ->get();
 
-        $records = Dmr::query()
-            ->where('year', $this->year)
-            ->get()
-            ->keyBy(function ($record) {
-                return $record->solicitor_id . '-' . $record->month;
-            });
+    $query = Dmr::query()
+        ->where('year', $this->year);
 
-        $this->cases = [];
+    /*
+     * If a date filter has been applied,
+     * determine which months should be displayed.
+     */
+    if ($this->startDate && $this->endDate) {
 
-        foreach ($solicitors as $solicitor) {
-            foreach (range(1, 12) as $month) {
-                $key = $solicitor->id . '-' . $month;
+        $start = \Carbon\Carbon::parse($this->startDate);
+        $end = \Carbon\Carbon::parse($this->endDate);
 
-                $this->cases[$solicitor->id][$month] =
-                    $records->get($key)?->cases ?? 0;
+        $startMonth = $start->month;
+        $endMonth = $end->month;
+
+        /*
+         * Make sure the selected dates belong to
+         * the currently selected reporting year.
+         */
+        if ($start->year !== $this->year || $end->year !== $this->year) {
+            $this->cases = [];
+
+            foreach ($solicitors as $solicitor) {
+                foreach (range(1, 12) as $month) {
+                    $this->cases[$solicitor->id][$month] = 0;
+                }
             }
+
+            return;
+        }
+
+        $query->whereBetween('month', [
+            $startMonth,
+            $endMonth,
+        ]);
+    }
+
+    $records = $query
+        ->get()
+        ->keyBy(function ($record) {
+            return $record->solicitor_id . '-' . $record->month;
+        });
+
+    $this->cases = [];
+
+    foreach ($solicitors as $solicitor) {
+
+        foreach (range(1, 12) as $month) {
+
+            $key = $solicitor->id . '-' . $month;
+
+            /*
+             * If there is no filter, show the normal value.
+             *
+             * If there is a filter, only show values for
+             * months inside the selected range.
+             */
+            if (
+                $this->startDate &&
+                $this->endDate
+            ) {
+
+                $start = \Carbon\Carbon::parse($this->startDate);
+                $end = \Carbon\Carbon::parse($this->endDate);
+
+                if ($month < $start->month || $month > $end->month) {
+                    $this->cases[$solicitor->id][$month] = 0;
+                    continue;
+                }
+            }
+
+            $this->cases[$solicitor->id][$month] =
+                $records->get($key)?->cases ?? 0;
         }
     }
+}
+
 
     public function updatedYear(): void
     {
         $this->loadCases();
     }
+
+    public function applyDateFilter(): void
+{
+    $this->resetErrorBag();
+
+    if (!$this->startDate || !$this->endDate) {
+        $this->addError(
+            'startDate',
+            'Please select both a start date and an end date.'
+        );
+
+        return;
+    }
+
+    $start = \Carbon\Carbon::parse($this->startDate);
+    $end = \Carbon\Carbon::parse($this->endDate);
+
+    if ($start->greaterThan($end)) {
+        $this->addError(
+            'startDate',
+            'Start date cannot be after the end date.'
+        );
+
+        return;
+    }
+
+    if (
+        $start->year !== $this->year ||
+        $end->year !== $this->year
+    ) {
+        $this->addError(
+            'startDate',
+            'Start date and end date must be within the selected reporting year.'
+        );
+
+        return;
+    }
+
+    $this->loadCases();
+}
+
+public function clearDateFilter(): void
+{
+    $this->startDate = null;
+    $this->endDate = null;
+
+    $this->resetErrorBag();
+
+    $this->loadCases();
+}
+
+
 
     public function save(): void
     {
@@ -135,12 +250,26 @@ public function downloadPdf()
         12 => 'December',
     ];
 
-    $records = Dmr::query()
-        ->where('year', $this->year)
-        ->get()
-        ->keyBy(function ($record) {
-            return $record->solicitor_id . '-' . $record->month;
-        });
+   $query = Dmr::query()
+    ->where('year', $this->year);
+
+if ($this->startDate && $this->endDate) {
+
+    $start = \Carbon\Carbon::parse($this->startDate);
+    $end = \Carbon\Carbon::parse($this->endDate);
+
+    $query->whereBetween('month', [
+        $start->month,
+        $end->month,
+    ]);
+}
+
+$records = $query
+    ->get()
+    ->keyBy(function ($record) {
+        return $record->solicitor_id . '-' . $record->month;
+    });
+
 
     $cases = [];
 
@@ -160,6 +289,10 @@ public function downloadPdf()
         'solicitors' => $solicitors,
         'months' => $months,
         'cases' => $cases,
+
+        // Date filter information
+    'startDate' => $this->startDate,
+    'endDate' => $this->endDate,
     ]);
 
     $pdf->setPaper('a4', 'landscape');
