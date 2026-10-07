@@ -107,6 +107,8 @@ class SolicitorInvoiceResource extends BaseResource
                         'probation_report' => 'Probation Report',
                         'country_expert' => 'Country Expert',
                         'cbt' => 'CBT',
+                        'general_surgeon' => 'General Surgeon',
+
                     ])
                     ->searchable()
                     ->required()
@@ -118,7 +120,7 @@ class SolicitorInvoiceResource extends BaseResource
     ->relationship('solicitor', 'name') // change 'name' if different
     ->searchable()
     ->preload()
-    ->required()
+    // ->required()
     ->native(false),
 
                 Textarea::make('solicitor_address')
@@ -502,8 +504,25 @@ class SolicitorInvoiceResource extends BaseResource
             fn () => print ($pdf->output()),
             'solicitor-invoice-' . $record->invoice_no . '.pdf'
         );
+
     }),
 
+    Action::make('downloadProFormaInvoice')
+    ->label('Pro Forma Invoice')
+    ->icon('heroicon-o-arrow-down-tray')
+    ->color('success')
+    ->action(function ($record) {
+
+        $pdf = Pdf::loadView('invoices.proformainvoice', [
+            'invoice' => $record,
+            'documentType' => 'PROFORMA INVOICE',
+        ]);
+
+        return response()->streamDownload(
+            fn () => print ($pdf->output()),
+            'solicitor-pro-forma-invoice-' . $record->invoice_no . '.pdf'
+        );
+    }),
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),

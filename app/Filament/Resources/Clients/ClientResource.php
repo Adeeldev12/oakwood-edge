@@ -337,6 +337,8 @@ Placeholder::make('age_status')
                                  'immigration' => 'Immigration',
         'family_criminal' => 'Family & Criminal Cases',
         'addendum_waiver' => 'Addendum / Waiver Form',
+        'rta' => 'RTA',
+
                             ])
                             ->searchable()
                             ->required()
