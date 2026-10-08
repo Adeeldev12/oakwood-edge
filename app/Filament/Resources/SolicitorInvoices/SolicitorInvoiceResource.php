@@ -107,6 +107,7 @@ class SolicitorInvoiceResource extends BaseResource
                         'probation_report' => 'Probation Report',
                         'country_expert' => 'Country Expert',
                         'cbt' => 'CBT',
+                        'scar_expert' => 'Scar Expert',
                         'general_surgeon' => 'General Surgeon',
 
                     ])
