@@ -332,15 +332,9 @@ Placeholder::make('age_status')
                     ->columns(1)
                     ->schema([
 
-                        Select::make('claim_type')
-                            ->options([
-                                 'immigration' => 'Immigration',
-        'family_criminal' => 'Family & Criminal Cases',
-        'addendum_waiver' => 'Addendum / Waiver Form',
-        'rta' => 'RTA',
+                        TextInput::make('claim_type')
 
-                            ])
-                            ->searchable()
+                            // ->searchable()
                             ->required()
                             ->columnSpan(2),
 

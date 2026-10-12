@@ -97,24 +97,13 @@ class SolicitorInvoiceResource extends BaseResource
     ->preload()
     ->nullable(),
 
-                Select::make('expert_type')
-                    ->options([
-                        'psychiatrist' => 'Psychiatrist',
-                        'psychologist' => 'Psychologist',
-                        'gp' => 'GP',
-                        'orthopaedic' => 'Orthopaedic',
-                        'social_work' => 'Social Work',
-                        'probation_report' => 'Probation Report',
-                        'country_expert' => 'Country Expert',
-                        'cbt' => 'CBT',
-                        'scar_expert' => 'Scar Expert',
-                        'general_surgeon' => 'General Surgeon',
-
-                    ])
-                    ->searchable()
-                    ->required()
-                    ->extraAttributes(['class' => 'py-3 text-base'])
-                    ->columnSpan(1),
+                TextInput::make('expert_type')
+    ->label('Expert Type')
+    ->placeholder('Enter expert type')
+    ->required()
+    ->maxLength(255)
+    ->extraAttributes(['class' => 'py-3 text-base'])
+    ->columnSpan(1),
 
                     Select::make('solicitor_id')
     ->label('Solicitor')
