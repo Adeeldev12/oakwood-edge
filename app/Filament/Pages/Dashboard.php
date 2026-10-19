@@ -20,6 +20,10 @@ class Dashboard extends BaseDashboard
             DashboardFilters::class,
         ];
     }
+    public function getWidgets(): array
+{
+    return [];
+}
     // protected function getFiltersForm(): array
     // {
     //     return [
