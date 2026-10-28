@@ -405,7 +405,7 @@
 
             <!-- INVOICE INFORMATION -->
 
-            <table class="invoice-box">
+            {{-- <table class="invoice-box">
 
                 <tr>
 
@@ -449,7 +449,57 @@
 
                 </tr>
 
-            </table>
+            </table> --}}
+
+            <!-- INVOICE / QUOTATION INFORMATION -->
+
+<table class="invoice-box">
+
+    <tr>
+        <td class="label-cell">
+            {{ ($documentType ?? 'INVOICE') === 'QUOTATION'
+                ? 'Quotation Number'
+                : 'Invoice Number' }}
+        </td>
+
+        <td class="value-cell">
+            @if(($documentType ?? 'INVOICE') === 'QUOTATION')
+                SOL-QUO#{{ $invoice->id }}
+            @else
+                SOL-INV#{{ $invoice->id }}
+            @endif
+        </td>
+    </tr>
+
+    <tr>
+        <td class="label-cell">
+            {{ ($documentType ?? 'INVOICE') === 'QUOTATION'
+                ? 'Quotation Date'
+                : 'Invoice Date' }}
+        </td>
+
+        <td class="value-cell">
+            {{ $invoice->created_at?->format('d M Y') ?? '-' }}
+        </td>
+    </tr>
+
+    {{-- @if(($documentType ?? 'INVOICE') !== 'QUOTATION') --}}
+        <tr>
+            <td class="label-cell">
+                Due Date
+            </td>
+
+            <td class="value-cell">
+                {{
+                    $invoice->due_date
+                        ? \Carbon\Carbon::parse($invoice->due_date)->format('d M Y')
+                        : '-'
+                }}
+            </td>
+        </tr>
+    {{-- @endif --}}
+
+</table>
 
 
             <!-- CLIENT / SOLICITOR -->
