@@ -483,7 +483,7 @@
         </td>
     </tr>
 
-    {{-- @if(($documentType ?? 'INVOICE') !== 'QUOTATION') --}}
+    @if(($documentType ?? 'INVOICE') !== 'QUOTATION')
         <tr>
             <td class="label-cell">
                 Due Date
@@ -497,7 +497,7 @@
                 }}
             </td>
         </tr>
-    {{-- @endif --}}
+    @endif
 
 </table>
 
